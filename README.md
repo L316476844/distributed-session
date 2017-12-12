@@ -9,6 +9,8 @@ Cookie是通过客户端保持状态的解决方案。从定义上来说，Cooki
 然后客户端每次向服务器发送请求的时候都会带上这些特殊的信息。<br/>
 session就是一种保存上下文信息的机制，它是针对每一个用户的，变量的值保存在服务器端，通过SessionID来区分不同的客户,<br/>
 session是以cookie或URL重写为基础的，默认使用cookie来实现，系统会创造一个名为JSESSIONID的输出返回给客户端Cookie保存。<br/>
+
+**强调一点：session和cookie是一一对应的关系。**
 ### 1、粘性session
 
 ### 2、应用服务器间的session复制共享
