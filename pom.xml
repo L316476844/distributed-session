@@ -1,0 +1,27 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.jon.lv</groupId>
+  <artifactId>distributed-session</artifactId>
+  <packaging>pom</packaging>
+  <version>1.0-SNAPSHOT</version>
+
+  <parent>
+    <groupId> org.springframework.boot</groupId>
+    <artifactId> spring-boot-starter-parent</artifactId>
+    <version>1.5.3.RELEASE</version>
+  </parent>
+
+  <modules>
+    <module>server-session</module>
+    <module>server-session-2</module>
+    <module>app-session</module>
+	<module>server-session-war</module>
+	<module>server-session-redis</module>
+	<module>server-session-redis-2</module>
+  </modules>
+
+  <build>
+    <finalName>distributed-session</finalName>
+  </build>
+</project>

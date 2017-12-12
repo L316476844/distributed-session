@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <title>index页面</title>
+</head>
+<body>
+
+<h1>index页面</h1>
+<table>
+    <tr>
+        <td>当前端口:</td>
+        <td>8001</td>
+    </tr>
+    <tr>
+        <td>用户名：</td>
+        <td th:text="${session.username}"></td>
+    </tr>
+    <tr>
+        <td>服务器端口：</td>
+        <td th:text="${session.serverPort}"></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>
+            <form action="/buy" method="post">
+                <input type="submit" name="buy"></input>
+            </form>
+        </td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>
+            <p></p>
+            <h2> <span th:text="${session.count}"></span>次购买 </h2>
+        </td>
+    </tr>
+</table>
+</body>
+</html>
