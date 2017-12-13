@@ -13,7 +13,11 @@ Session是以cookie或URL重写为基础的，默认使用cookie来实现，系�
 **强调一点：session和cookie是一一对应的关系。**
 ### 1、粘性session
 
+<img src="https://github.com/L316476844/distributed-session/blob/master/file/s1.png" alt="">
+
 ### 2、应用服务器间的session复制共享
+<img src="https://github.com/L316476844/distributed-session/blob/master/file/s2.png" alt="">
 
 ### 3、基于cache DB缓存的session共享
+<img src="https://github.com/L316476844/distributed-session/blob/master/file/s3.png" alt="">
 
