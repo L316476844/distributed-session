@@ -203,10 +203,10 @@ server-session-redis, server-session-redis-2为springboot项目已经集成redis
 依次启动redis服务, server-session-redis, server-session-redis-2, ngix服务测试。 <br/>
 
 
-#### 4、spring-session-data-redis源码解读
+### 4、spring-session-data-redis源码解读
 
 
-#### 5、springboot打war包方式 - server-session-war
+### 5、springboot打war包方式 - server-session-war
 
 * pom打包方式修改为war包
     `<packaging>war</packaging>`
