@@ -12,8 +12,13 @@ Session是以cookie或URL重写为基础的，默认使用cookie来实现，系�
 
 **强调一点：session和cookie是一一对应的关系。**
 ### 1、粘性session
-
 <img src="https://github.com/L316476844/distributed-session/blob/master/file/s1.png" alt="">
+
++ 原理：粘性Session是指将用户锁定到某一个服务器上,用户第一次请求时，负载均衡器将用户的请求转发到了A服务器上,那么用户以后的每次请求都会转发到A服务器上。
++ 优点：简单，不需要对session做任何处理。
++ 缺点：缺乏容错性，如果当前访问的服务器发生故障，用户被转移到第二个服务器上时，他的session信息都将失效。
++ 实现方式：以Nginx为例，在upstream模块配置ip_hash属性即可实现粘性Session。
+
 
 ### 2、应用服务器间的session复制共享
 <img src="https://github.com/L316476844/distributed-session/blob/master/file/s2.png" alt="">
