@@ -165,7 +165,7 @@ tomcat2 server.xml改动点：<br/>
         <ClusterListener className="org.apache.catalina.ha.session.ClusterSessionListener"/>
     </Cluster>            
 
-step2: 应用内app-session（web.xml)配置必须添加<distributable/>目前springboot中没找到替代方式。 <br/>
+step2: **应用内app-session（web.xml)配置必须添加`<distributable/>`目前springboot中没找到替代方式。** <br/>
 
 step3: 启动tomcat1,tomcat2 启动nginx 测试 <br/>
     		
