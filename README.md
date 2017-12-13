@@ -204,3 +204,29 @@ server-session-redis, server-session-redis-2为springboot项目已经集成redis
 
 
 #### 4、spring-session-data-redis源码解读
+
+
+#### 5、springboot打war包方式 - server-session-war
+
+* pom打包方式修改为war包
+    `<packaging>war</packaging>`
+* pom中去掉spring-boot-starter-web包
+* pom中引入spring-boot-starter-tomcat具体参考server-session-war  pom文件
+* SpringBootApplication启动类继承SpringBootServletInitializer类且实现configure接口
+
+        @SpringBootApplication
+        public class ServerSessionApplication extends SpringBootServletInitializer {
+        
+            @Override
+            protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+                
+                return application.sources(ServerSessionApplication.class);
+            }
+        
+            public static void main(String[] args) {
+                SpringApplication.run(ServerSessionApplication.class, args);
+        
+            }
+        }
+        
+
