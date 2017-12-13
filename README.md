@@ -173,7 +173,7 @@ step3: 启动tomcat1,tomcat2 启动nginx 测试 <br/>
 <img src="https://github.com/L316476844/distributed-session/blob/master/file/s3.png" alt="">
 
 * 原理：session持久化到缓存或者db中。
-* 优点：gemfire,memcache或则redis本身就是一个分布式缓存，便于扩展。网络开销较小，几乎没有IO。性能也更好。服务器出现问题，session不会丢失。
+* 优点：gemfire,memcache或则redis本身就是一个分布式缓存，便于扩展。网络开销较小，IO开销也非常小，性能也更好。服务器出现问题，session不会丢失。
 * 缺点：假如突然涌来大量用户产生了很多数据把存储 session 的机器内存占满了redis会变的比较慢
 * 实现方式：spring-session-data-redis
 
