@@ -172,5 +172,35 @@ step3: 启动tomcat1,tomcat2 启动nginx 测试 <br/>
 ### 3、基于cache DB缓存的session共享
 <img src="https://github.com/L316476844/distributed-session/blob/master/file/s3.png" alt="">
 
+* 原理：session持久化到缓存或者db中。
+* 优点：gemfire,memcache或则redis本身就是一个分布式缓存，便于扩展。网络开销较小，几乎没有IO。性能也更好。服务器出现问题，session不会丢失。
+* 缺点：假如突然涌来大量用户产生了很多数据把存储 session 的机器内存占满了redis会变的比较慢
+* 实现方式：spring-session-data-redis
+
+server-session-redis, server-session-redis-2为springboot项目已经集成redis session。<br/>
+    
+    <!-- pom添加 -->
+    <dependency>
+        <groupId>org.springframework.session</groupId>
+        <artifactId>spring-session-data-redis</artifactId>
+    </dependency>
+
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-data-redis</artifactId>
+    </dependency>
+    
+    <!-- 添加配置类 -->
+    @Configuration
+    @EnableRedisHttpSession
+    public class RedisSessionConfig {
+    }
+    
+    <!-- application.properties 添加配置-->
+    spring.redis.host=localhost
+    spring.redis.port=6379
+
+依次启动redis服务, server-session-redis, server-session-redis-2, ngix服务测试。 <br/>
 
 
+#### 4、spring-session-data-redis源码解读
