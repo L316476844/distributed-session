@@ -1,5 +1,15 @@
 # 集群/分布式环境Session的几种策略 <br>
 
+项目结构介绍：<br/>
+* server-session, server-session-2,为springboot项目粘性session测试.
+* app-session 为web服务项目需要依赖Tomcat启动。应用服务器间的session复制共享测试。
+* server-session-redis, server-session-redis-2为springboot项目基于cache DB缓存的session共享测试。
+* server-session-war 为springboot打war包的例子。
+* config目录为windows版本 nginx, redis, tomcat集群配置文件。
+* file目录为架构图。
+
+本文主要参考：http://blog.csdn.net/woaigaolaoshi/article/details/50902010
+
 ### 集群/分布式session产生的原因？ 
 B/S交互下是通过http协议完成，Http是一个无状态协议。无状态是指，当浏览器发送请求给服务器的时候，服务器响应，<br/>
 但是同一个浏览器再发送请求给服务器的时候，他会响应，但是他不知道你就是刚才那个浏览器，简单地说，就是服务器不会去记得你，所以是无状态协议。
@@ -19,7 +29,33 @@ Session是以cookie或URL重写为基础的，默认使用cookie来实现，系�
 + 缺点：缺乏容错性，如果当前访问的服务器发生故障，用户被转移到第二个服务器上时，他的session信息都将失效。
 + 实现方式：以Nginx为例，在upstream模块配置ip_hash属性即可实现粘性Session。
 
+可参考config内的nginx.conf配置：<br/>
 
+    upstream load_balance_server {
+        server 127.0.0.1:8001;
+        server 127.0.0.1:9001;
+        ip_hash;
+    }
+    server {
+        listen       100;    		
+        #定义使用www.xx.com访问
+        #server_name www.helloworld.com;    		
+        server_name  localhost;
+
+        location / {
+            root   html;
+            index  index.html index.htm;
+            #请求转向load_balance_server 定义的服务器列表
+            proxy_pass http://load_balance_server ;
+            
+            #以下是一些反向代理的配置(可选择性配置)
+            proxy_redirect off;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr; 
+        }
+    }	 
+
+依次启动server-session, server-session-2项目，然后启动nginx进行测试。
 ### 2、应用服务器间的session复制共享
 <img src="https://github.com/L316476844/distributed-session/blob/master/file/s2.png" alt="">
 
