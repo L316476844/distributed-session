@@ -205,7 +205,72 @@ server-session-redis, server-session-redis-2为springboot项目已经集成redis
 
 ### 4、spring-session-data-redis源码解读
 
+    首先切入点在`@EnableRedisHttpSession`注解类上,查看源码需要引入`@Import(RedisHttpSessionConfiguration.class)`类。
+    @Configuration
+    @EnableScheduling
+    public class RedisHttpSessionConfiguration extends SpringHttpSessionConfiguration
+    		implements EmbeddedValueResolverAware, ImportAware {
+    此类继承至SpringHttpSessionConfiguration 同时此类也声明了redis的操作模板
+    @Bean
+    public RedisTemplate<Object, Object> sessionRedisTemplate(	
+    redis session操作库
+    @Bean
+    public RedisOperationsSessionRepository sessionRepository(
+    
+    SpringHttpSessionConfiguration类中定义了SessionRepositoryFilter过滤器来操作session该过滤器的order是最后执行
+    @Bean
+    public <S extends ExpiringSession> SessionRepositoryFilter<? extends ExpiringSession> springSessionRepositoryFilter(
+    SessionRepositoryFilter类中包含找到FilterChain类中的doFilter方法发现对HttpRequest和HttpResponse进行了包装
+    @Override
+    protected void doFilterInternal(HttpServletRequest request,
+            HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
+        request.setAttribute(SESSION_REPOSITORY_ATTR, this.sessionRepository);
 
+        SessionRepositoryRequestWrapper wrappedRequest = new SessionRepositoryRequestWrapper(
+                request, response, this.servletContext);
+        SessionRepositoryResponseWrapper wrappedResponse = new SessionRepositoryResponseWrapper(
+                wrappedRequest, response);
+
+        HttpServletRequest strategyRequest = this.httpSessionStrategy
+                .wrapRequest(wrappedRequest, wrappedResponse);
+        HttpServletResponse strategyResponse = this.httpSessionStrategy
+                .wrapResponse(wrappedRequest, wrappedResponse);
+
+        try {
+            filterChain.doFilter(strategyRequest, strategyResponse);
+        }
+        finally {
+            wrappedRequest.commitSession();
+        }
+    }
+    从SessionRepositoryRequestWrapper请求的包装类中可以看到session的创建和保存及获取
+    private void commitSession() {
+        HttpSessionWrapper wrappedSession = getCurrentSession();
+        if (wrappedSession == null) {
+            if (isInvalidateClientSession()) {
+                SessionRepositoryFilter.this.httpSessionStrategy
+                        .onInvalidateSession(this, this.response);
+            }
+        }
+        else {
+            S session = wrappedSession.getSession();
+            SessionRepositoryFilter.this.sessionRepository.save(session);
+            if (!isRequestedSessionIdValid()
+                    || !session.getId().equals(getRequestedSessionId())) {
+                SessionRepositoryFilter.this.httpSessionStrategy.onNewSession(session,
+                        this, this.response);
+            }
+        }
+    }
+    此刻我们基本已经了解spring session生成的过程，但是session是有有效期的。接下来我们查看一下session的定时任务.
+    前面我们说到RedisHttpSessionConfiguration内声明了RedisOperationsSessionRepository类实例对象，该对象内
+    @Scheduled(cron = "${spring.session.cleanup.cron.expression:0 * * * * *}")
+    public void cleanupExpiredSessions() {
+        this.expirationPolicy.cleanExpiredSessions();
+    }
+    开启了定时任务来清理过期的session。
+    
 ### 5、springboot打war包方式 - server-session-war
 
 * pom打包方式修改为war包
